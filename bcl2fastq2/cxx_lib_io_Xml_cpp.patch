@@ -1,0 +1,34 @@
+--- src/cxx/lib/io/Xml.cpp	2017-05-12 19:30:33.715239838 +0800
++++ src/cxx/lib/io/Xml_fix.cpp	2017-05-12 19:30:25.972239488 +0800
+@@ -23,6 +23,7 @@
+ #include <boost/filesystem/fstream.hpp>
+ #include <boost/format.hpp>
+ #include <boost/foreach.hpp>
++#include <boost/version.hpp>
+ #include <boost/property_tree/xml_parser.hpp>
+ 
+ #include "io/Xml.hh"
+@@ -169,7 +170,11 @@
+     {
+         unindex(*tree.begin(), treeWithIndexAttributes);
+ #ifndef WIN32
++#if BOOST_VERSION >= 105600
++	boost::property_tree::write_xml(os, treeWithIndexAttributes, boost::property_tree::xml_writer_make_settings<boost::property_tree::ptree::key_type>(' ', 2));
++#else
+         boost::property_tree::write_xml(os, treeWithIndexAttributes, boost::property_tree::xml_writer_make_settings(' ', 2));
++#endif
+ #else
+         boost::property_tree::write_xml(os, treeWithIndexAttributes, boost::property_tree::xml_writer_make_settings<std::string>(' ', 2));
+ #endif
+@@ -177,7 +182,11 @@
+     else
+     {
+ #ifndef WIN32
++#if BOOST_VERSION >= 105600
++	boost::property_tree::write_xml(os, tree, boost::property_tree::xml_writer_make_settings<boost::property_tree::ptree::key_type>(' ', 2));
++#else
+         boost::property_tree::write_xml(os, tree, boost::property_tree::xml_writer_make_settings(' ', 2));
++#endif
+ #else
+         boost::property_tree::write_xml(os, tree, boost::property_tree::xml_writer_make_settings<std::string>(' ', 2));
+ #endif
