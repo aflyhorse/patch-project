@@ -1,11 +1,13 @@
 --- src/cxx/include/io/GzipDecompressor.hh	2017-05-12 19:35:30.128253238 +0800
 +++ src/cxx/include/io/GzipDecompressor_fix.hh	2017-05-12 19:35:10.287252341 +0800
-@@ -28,6 +28,9 @@
+@@ -28,6 +28,11 @@
  #include <boost/iostreams/concepts.hpp>
  
  #include <zlib.h>
 +#ifndef OF
++#ifdef _Z_OF
 +#define OF _Z_OF
++#endif
 +#endif
  
  #include "common/Exceptions.hh"

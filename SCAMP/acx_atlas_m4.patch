@@ -1,0 +1,75 @@
+--- acx_atlas.m4	2017-08-17 11:12:19.656660978 +0800
++++ acx_atlas_fixed.m4	2017-08-17 11:05:13.998617710 +0800
+@@ -183,7 +183,22 @@
+             if test x$acx_atlas_ok = xyes; then
+               ATLAS_LIBPATH="-L$atlas_def/lib"
+             else
+-              ATLAS_ERROR="CBLAS/LAPack library files not found at usual locations!"
++dnl New version (>= 3.10 ) of ATLAS has different lib names:
++              atlas_def=/usr/lib64/atlas
++              unset ac_cv_lib_lapack_clapack_dpotrf
++              unset ac_cv_lib_cblas_cblas_dgemm
++              acx_atlas_ok=yes
++              AC_CHECK_LIB(lapack, [clapack_dpotrf],, [acx_atlas_ok=no],
++      [-L$atlas_def -lblas -lsatlas -lm])
++              AC_CHECK_LIB(blas, cblas_dgemm,, [acx_atlas_ok=no],
++      [-L$atlas_def -lsatlas -lm])
++              if test x$acx_atlas_ok = xyes; then
++                AC_MSG_NOTICE([Atlas >= 3.10 found.])
++                ATLAS_NEWVER="yes"
++                ATLAS_LIBPATH="-L$atlas_def"
++              else
++                ATLAS_ERROR="CBLAS/LAPack library files not found at usual locations!"
++              fi
+             fi
+           fi
+         fi
+@@ -226,25 +241,42 @@
+ 	[Define if you have the ATLAS libraries and header files.])
+   if test x$3 = xyes; then
+ dnl Check whether the multithreaded version of ATLAS is there too:
+-    AC_CHECK_LIB(ptcblas, cblas_dgemm, [acx_atlast_ok=yes], [acx_atlast_ok=no],
+-	[$ATLAS_LIBPATH -lcblas -latlas -lm])
++    if test x"$ATLAS_NEWVER" = xyes; then
++      AC_CHECK_LIB(tatlas, cblas_dgemm, [acx_atlast_ok=yes], [acx_atlast_ok=no],
++        [$ATLAS_LIBPATH -lblas -lm])
++    else
++      AC_CHECK_LIB(ptcblas, cblas_dgemm, [acx_atlast_ok=yes], [acx_atlast_ok=no],
++  	    [$ATLAS_LIBPATH -lcblas -latlas -lm])
++    fi
+     if test x$acx_atlast_ok = xyes; then
+-      ATLAS_LIBS="$ATLAS_LIBPATH -l$lapack_lib -lptcblas -lcblas -latlas"
++      if test x"$ATLAS_NEWVER" = xyes; then
++        ATLAS_LIBS="$ATLAS_LIBPATH -llapack -lblas -ltatlas"
++      else
++        ATLAS_LIBS="$ATLAS_LIBPATH -llapack -lptcblas -lcblas -latlas"
++      fi
+       LIBS="$OLIBS"
+       AC_SUBST(ATLAS_LIBS)
+       AC_DEFINE(HAVE_ATLAS_MP,1,
+ 	[Define if you have the parallel ATLAS libraries.])
+       $4
+     else
+-      ATLAS_LIBS="$ATLAS_LIBPATH -l$lapack_lib -lcblas -latlas"
++      if test x"$ATLAS_NEWVER" = xyes; then
++        ATLAS_LIBS="$ATLAS_LIBPATH -llapack -lblas -lsatlas"
++      else
++        ATLAS_LIBS="$ATLAS_LIBPATH -llapack -lcblas -latlas"
++      fi
+       LIBS="$OLIBS"
+       AC_SUBST(ATLAS_LIBS)
+       ATLAS_WARN="CBLAS/LAPack was compiled without multithreading support!"
+       AC_SUBST(ATLAS_WARN)
+-      $4         
++      $4
+     fi
+   else
+-    ATLAS_LIBS="$ATLAS_LIBPATH -l$lapack_lib -lcblas -latlas"
++    if test x"$ATLAS_NEWVER" = xyes; then
++      ATLAS_LIBS="$ATLAS_LIBPATH -llapack -lblas -lsatlas"
++    else
++      ATLAS_LIBS="$ATLAS_LIBPATH -llapack -lcblas -latlas"
++    fi
+     LIBS="$OLIBS"
+     AC_SUBST(ATLAS_LIBS)
+     $4
