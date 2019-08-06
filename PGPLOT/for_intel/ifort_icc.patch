@@ -1,0 +1,41 @@
+--- sys_linux/g77_gcc.conf	1999-07-06 02:10:33.000000000 +0800
++++ sys_linux/ifort_icc.conf	2019-08-06 14:36:01.634140309 +0800
+@@ -34,25 +34,25 @@
+ # Mandatory.
+ # The FORTRAN compiler to use.
+  
+-   FCOMPL="g77"
++   FCOMPL="ifort"
+ 
+ # Mandatory.
+ # The FORTRAN compiler flags to use when compiling the pgplot library.
+ # (NB. makemake prepends -c to $FFLAGC where needed)
+  
+-   FFLAGC="-u -Wall -fPIC -O"
++   FFLAGC="-u -warn all -fPIC -O"
+ 
+ # Mandatory.
+ # The FORTRAN compiler flags to use when compiling fortran demo programs.
+ # This may need to include a flag to tell the compiler not to treat
+ # backslash characters as C-style escape sequences
+  
+-   FFLAGD="-fno-backslash"
++   FFLAGD="-nbs"
+ 
+ # Mandatory.
+ # The C compiler to use.
+  
+-   CCOMPL="gcc"
++   CCOMPL="icc"
+ 
+ # Mandatory.
+ # The C compiler flags to use when compiling the pgplot library.
+@@ -74,7 +74,7 @@
+ # The library-specification flags to use when linking normal pgplot
+ # demo programs.
+  
+-   LIBS="-L/usr/X11R6/lib -lX11"
++   LIBS="-L/usr/X11R6/lib -lX11 -lsvml"
+ 
+ # Optional: Needed by XMDRIV (/xmotif).
+ # The library-specification flags to use when linking motif

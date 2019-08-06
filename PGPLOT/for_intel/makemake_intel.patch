@@ -1,0 +1,19 @@
+--- makemake	1999-05-05 06:35:43.000000000 +0800
++++ makemake_intel	2019-08-06 14:57:15.336423107 +0800
+@@ -1025,7 +1025,6 @@
+ grivas.o : $(DRVDIR)/gadef.h
+ grtv00.o : $(DRVDIR)/imdef.h
+ pgxwin.o : $(DRVDIR)/pgxwin.h
+-pndriv.o : ./png.h ./pngconf.h ./zlib.h ./zconf.h
+ 
+ x2driv.o figdisp_comm.o: $(DRVDIR)/commands.h
+ 
+@@ -1052,7 +1051,7 @@
+ 
+ cpgdemo: cpgplot.h $(SRC)/cpg/cpgdemo.c libcpgplot.a
+ 	$(CCOMPL) $(CFLAGD) -c -I. $(SRC)/cpg/cpgdemo.c
+-	$(FCOMPL) -o cpgdemo cpgdemo.o $(CPGPLOT_LIB) $(LIBS)
++	$(FCOMPL) -nofor_main -o cpgdemo cpgdemo.o $(CPGPLOT_LIB) $(LIBS)
+ 	rm -f cpgdemo.o
+ 
+ pgmdemo: pgmdemo.o libXmPgplot.a

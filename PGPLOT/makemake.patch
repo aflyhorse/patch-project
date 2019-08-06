@@ -1,0 +1,10 @@
+--- makemake	1999-05-05 06:35:43.000000000 +0800
++++ makemake_fixed	2019-08-06 14:56:27.768806961 +0800
+@@ -1025,7 +1025,6 @@
+ grivas.o : $(DRVDIR)/gadef.h
+ grtv00.o : $(DRVDIR)/imdef.h
+ pgxwin.o : $(DRVDIR)/pgxwin.h
+-pndriv.o : ./png.h ./pngconf.h ./zlib.h ./zconf.h
+ 
+ x2driv.o figdisp_comm.o: $(DRVDIR)/commands.h
+ 
